@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Change theme colors here -->
+        <item name = "colorPrimary">@color/design_default_color_primary</item>
+        <item name = "colorPrimaryDark">@color/design_default_color_primary_dark</item>
+        <item name = "colorAccent">@color/design_default_color_on_secondary</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+</resources>
