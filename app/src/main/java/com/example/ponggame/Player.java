@@ -4,16 +4,14 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
-public class Player
-{
+public class Player {
     private int paddleWidth;
     private int paddleHeight;
     public int score;
     private Paint paint;
     public RectF bounds;
 
-    public Player(int paddleWidth, int paddleHeight, Paint paint)
-    {
+    public Player(int paddleWidth, int paddleHeight, Paint paint) {
         this.paddleWidth = paddleWidth;
         this.paddleHeight = paddleHeight;
         this.paint = paint;
@@ -21,17 +19,21 @@ public class Player
         bounds = new RectF(0, 0, paddleWidth, paddleWidth);
     }//end Player constructor
 
-    public void draw(Canvas canvas)
-    {
+    public void draw(Canvas canvas) {
         canvas.drawRoundRect(bounds, 5, 5, paint);
     }//end draw
 
-    public int getPaddleWidth()
-    {
+    public int getPaddleWidth() {
         return paddleWidth;
     }//end getPaddleWidth
 
     public int getPaddleHeight() {
         return paddleHeight;
     }//end getPaddleHeight
+
+    public String toString()
+    {
+        return "Width = " + paddleWidth + "\nHeight" + paddleHeight + "\nScore = " + score + "\nTop = " +
+                bounds.top + "\nLeft = " + bounds.left;
+    }//end toString
 }//end Player class
