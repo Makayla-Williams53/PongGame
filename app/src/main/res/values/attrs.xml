@@ -5,9 +5,10 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
+    //creating custom attributes for the PongTable
     <declare-styleable name="PongTable">
-        <attr name="racketHeight" format="integer" />
-        <attr name="racketWidth" format="integer" />
+        <attr name="paddleHeight" format="integer" />
+        <attr name="paddleWidth" format="integer" />
         <attr name="ballRadius" format="integer" />
     </declare-styleable>
 </resources>

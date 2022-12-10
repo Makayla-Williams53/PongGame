@@ -10,6 +10,7 @@
 
     <color name ="black_overlay">#24000000</color>
 
+    //creates custom colors for the project
     <color name="table_color">#454242</color>
     <color name="player_color">#91191D</color>
     <color name="opponent_color">#2436AA</color>
