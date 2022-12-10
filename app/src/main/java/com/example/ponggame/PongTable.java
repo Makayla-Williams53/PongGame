@@ -2,10 +2,12 @@ package com.example.ponggame;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -104,28 +106,124 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     public PongTable(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+        setUpPongTable(context, attrs);
     }//end PongTable
 
     public PongTable(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
+        setUpPongTable(context, attrs);
     }//end PongTable
 
+    @Override
+    protected void onDraw(Canvas canvas)
+    {
+        super.onDraw(canvas);
+        //draws the background color
+        canvas.drawColor(ContextCompat.getColor(aContext, R.color.table_color));
+        //draws the bounds rectangle
+        canvas.drawRect(0,0,aTableHeight, aTableWidth, aTableBoundPaint);
+
+        //int for the center of the screen
+        int mid = aTableWidth/2;
+        //draws the center line
+        canvas.drawLine(mid,1, mid, aTableHeight - 1, aNetPaint);
+
+        //calls the draw functions for the players and ball
+        aPlayer.draw(canvas);
+        aOpponent.draw(canvas);
+        aBall.draw(canvas);
+    }//end onDraw
+
+    //makes opponent paddle move
+    //change later
+    private void doAI()
+    {
+        //if the top of the opponent paddle is higher than the ball
+        if(aOpponent.bounds.top > aBall.circleY)
+        {
+            //have the paddle move down
+            movePlayer(aOpponent, aOpponent.bounds.left, aOpponent.bounds.top - PADDLE_SPEED);
+        }//end if
+        //if the top of the paddle is lower than the ball
+        else if(aOpponent.bounds.top + aOpponent.getPaddleHeight() < aBall.circleY)
+        {
+            //have the paddle move up
+            movePlayer(aOpponent, aOpponent.bounds.left, aOpponent.bounds.top + PADDLE_SPEED);
+        }
+    }//end doAi
+
+    //creates the surface
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder)
     {
 
     }//end surfaceCreated
 
+    //updates the surface
     @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2)
+    public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height)
     {
-
+        aTableWidth = width;
+        aTableHeight = height;
     }//end surfaceChanged
 
+    //destroys the surface
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder)
     {
 
     }//end surfaceDestroyed
+
+    //touch screen events
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        return super.onTouchEvent(event);
+    }//end onTouchEvent
+
+    //function moves player paddle up and down
+    public void movePlayerPaddle(float y, Player player)
+    {
+        synchronized (aHolder)
+        {
+            movePlayer(player, player.bounds.left, player.bounds.top + y);
+        }//end synchronized
+    }//end movePlayerPaddle
+
+    //collision test
+    public boolean isTouchOnPaddle(MotionEvent event, Player player)
+    {
+        //tests to see if the bounds of aPlayer contains the passed in object same x and y
+        return aPlayer.bounds.contains(event.getX(), event.getY());
+    }//end isTouchOnPaddle
+
+    //sets the player bounds
+    public synchronized void movePlayer(Player player, float left, float top)
+    {
+        //sets the left bound to at least two in
+        if(left < 2)
+        {
+            left = 2;
+        }
+        //but is at least is two away from the right
+        else if(left + player.getPaddleWidth() >= aTableWidth - 2)
+        {
+            left = aTableWidth - player.getPaddleWidth() - 2;
+        }
+
+        //sts the top bound to be at least 0
+        if(top < 0)
+        {
+            top = 0;
+        }
+        //but at least is one away from the bottom
+        else if(top + player.getPaddleHeight() >= aTableHeight)
+        {
+            top = aTableHeight - player.getPaddleHeight() - 1;
+        }
+
+        //offsets the player bounds by left and top but keeps the width and height the same
+        player.bounds.offsetTo(left, top);
+    }
 }//end PongTable class
