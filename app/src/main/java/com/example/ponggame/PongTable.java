@@ -229,6 +229,26 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         }//end else if
     }//end doAi
 
+    public void setUpTable()
+    {
+        placeBall();
+        placePlayers();
+    }
 
+    //places the player paddles for the start of the game
+    private void placePlayers()
+    {
+        aPlayer.bounds.offsetTo(2, (aTableHeight - aPlayer.getPaddleHeight()) / 2);
+        aOpponent.bounds.offsetTo((aTableWidth-aOpponent.getPaddleWidth() - 2), (aTableHeight - aOpponent.getPaddleHeight()) / 2);
+    }//end placePlayers
+
+    //places the ball and starts it moving for the start of game
+    private void placeBall()
+    {
+        aBall.circleX = aTableWidth/2;
+        aBall.circleY = aTableHeight/2;
+        aBall.velocityY = (aBall.velocityY/Math.abs(aBall.velocityY)) * BALL_SPEED;
+        aBall.velocityX = (aBall.velocityX/Math.abs(aBall.velocityX)) * BALL_SPEED;
+    }//end placeBall
 
 }//end PongTable class
