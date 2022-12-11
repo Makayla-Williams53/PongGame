@@ -2,7 +2,9 @@ package com.example.ponggame;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 public class GameActivity extends AppCompatActivity
 {
@@ -13,4 +15,9 @@ public class GameActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
     }//end onCreate
+
+    public void startGame(View view)
+    {
+        Intent intent = new Intent(GameActivity.this, PongActivity.class);
+    }
 }//end GameActivity class
