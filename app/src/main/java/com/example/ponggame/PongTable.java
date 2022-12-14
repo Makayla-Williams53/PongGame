@@ -352,6 +352,19 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         aBall.velocityX = (aBall.velocityX/Math.abs(aBall.velocityX)) * BALL_SPEED;
     }//end placeBall
 
+    public Player getPLayer()
+    {
+        return aPlayer;
+    }
+    public Player getOpponent()
+    {
+        return aOpponent;
+    }
+    public Ball getBall()
+    {
+        return aBall;
+    }
+
     public void setScorePlayer(TextView view)
     {
         aScorePlayer = view;

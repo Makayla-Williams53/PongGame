@@ -3,10 +3,13 @@ package com.example.ponggame;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.os.Bundle;
+import android.os.Message;
 import android.os.SystemClock;
 import android.view.SurfaceHolder;
 
 import android.os.Handler;
+import android.view.View;
 
 //allows for multiple threads of code to be running concurrently
 //also allows to manipulate the priority of each thread
@@ -150,6 +153,35 @@ public class GameThread extends Thread
     public boolean isBetweenRounds()
     {
         return aGameState != STATE_RUNNING;
+    }
+
+    public void setStatusText(String text)
+    {
+        Message msg = aGameStatusHandler.obtainMessage();
+        Bundle b = new Bundle();
+        b.putString("text", text);
+        b.putInt("visibility", View.VISIBLE);
+        msg.setData(b);
+        aGameStatusHandler.sendMessage(msg);
+    }
+
+    private void hideStatus()
+    {
+        Message msg = aGameStatusHandler.obtainMessage();
+        Bundle b = new Bundle();
+        b.putInt("visibility", View.INVISIBLE);
+        msg.setData(b);
+        aGameStatusHandler.sendMessage(msg);
+    }
+
+    public void setScoreText( String playerScore, String opponentScore)
+    {
+        Message msg = aScoreHandler.obtainMessage();
+        Bundle b = new Bundle();
+        b.putString("player", playerScore);
+        b.putString("opponent", opponentScore);
+        msg.setData(b);
+        aGameStatusHandler.sendMessage(msg);
     }
 
 
