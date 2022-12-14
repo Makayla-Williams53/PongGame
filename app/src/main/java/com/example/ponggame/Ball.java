@@ -42,7 +42,7 @@ public class Ball
             circleY = radius;
         }//end if
         //if it is too close to the top of the screen that it'll be off frame it moves down
-        else if(circleY + radius > canvas.getHeight())
+        else if(circleY + radius >= canvas.getHeight())
         {
             circleY = canvas.getHeight() - radius - 1;
         }//end else if

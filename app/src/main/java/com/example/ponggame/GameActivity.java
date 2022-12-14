@@ -21,3 +21,7 @@ public class GameActivity extends AppCompatActivity
         Intent intent = new Intent(GameActivity.this, PongActivity.class);
     }
 }//end GameActivity class
+
+//followed a tutorial from Vijay Kumar
+//https://www.youtube.com/playlist?list=PLYaEKGt6xfkvFBWYVeYiA6Xc-WSWXIPaH
+//followed the tutorial but added certain aspects(splash screen) and commented on what each thing did and how it worked

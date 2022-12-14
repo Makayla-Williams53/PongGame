@@ -17,10 +17,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import java.util.Random;
+
 
 public class PongTable extends SurfaceView implements SurfaceHolder.Callback
 {
     public static final String TAG = PongTable.class.getSimpleName();
+
+
+    private GameThread aGame;
+
+    private TextView aStatus;
+    private TextView aScorePlayer;
+    private TextView aScoreOpponent;
+
     //creates variables for all the moving objects
     private Player aPlayer;
     private Player aOpponent;
@@ -54,6 +64,24 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         aHolder = getHolder();
         //allows the use of lifecycle stages(called callbacks) they are onCreate(), onStart(), onResume(), onPause(), on Stop(), and onDestroy()
         aHolder.addCallback(this);
+
+        //Game Thread initialize
+        aGame = new GameThread(this.getContext(), aHolder, this,
+                new Handler(){
+                    @Override
+                    public void handleMessage(@NonNull Message msg) {
+                        super.handleMessage(msg);
+                        aStatus.setVisibility(msg.getData().getInt("visibility"));
+                        aStatus.setText(msg.getData().getString("Text"));
+                    }
+                }, new Handler(){
+                    @Override
+                    public void handleMessage(@NonNull Message msg) {
+                        super.handleMessage(msg);
+                        aScorePlayer.setText(msg.getData().getString("player"));
+                        aScoreOpponent.setText(msg.getData().getString("opponent"));
+                    }
+        });
 
         //Game Thread or Game Loop Initialized
         TypedArray a = ctx.obtainStyledAttributes(attr, R.styleable.PongTable);
@@ -106,9 +134,9 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     }//end initPongTable
 
     @Override
-    protected void onDraw(Canvas canvas)
+    public void draw(Canvas canvas)
     {
-        super.onDraw(canvas);
+        super.draw(canvas);
         //draws the background color
         canvas.drawColor(ContextCompat.getColor(aContext, R.color.table_color));
         //draws the bounds rectangle
@@ -142,6 +170,8 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder)
     {
+        aGame.setRunning(true);
+        aGame.start();
     }//end surfaceCreated
 
     //updates the surface
@@ -150,21 +180,82 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     {
         aTableWidth = width;
         aTableHeight = height;
+        aGame.setUpNewRound();
     }//end surfaceChanged
 
     //destroys the surface
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder)
     {
-
+        boolean retry = true;
+        aGame.setRunning(false);
+        while(retry)
+        {
+            try
+            {
+                aGame.join();
+                retry = false;
+            }
+            catch(InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }//end surfaceDestroyed
 
     //touch screen events
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
-        return super.onTouchEvent(event);
+        if(!aGame.sensorsOn())
+        {
+            switch(event.getAction())
+            {
+                case MotionEvent.ACTION_DOWN:
+                    if(aGame.isBetweenRounds())
+                    {
+                        aGame.setState(GameThread.STATE_RUNNING);
+                    }
+                    else
+                    {
+                        if(isTouchOnPaddle(event,aPlayer))
+                        {
+                            aMoving = true;
+                            aLastTouchY = event.getY();
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if(aMoving)
+                    {
+                        float y = event.getY();
+                        float dy = y - aLastTouchY;
+                        aLastTouchY = y;
+                        movePlayerPaddle(dy, aPlayer);
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    aMoving = false;
+                    break;
+            }//end switch
+        }//end if
+        else
+        {
+            if(event.getAction() == MotionEvent.ACTION_DOWN)
+            {
+                if(aGame.isBetweenRounds())
+                {
+                    aGame.setState(GameThread.STATE_RUNNING);
+                }
+            }
+        }//end else
+        return true;
     }//end onTouchEvent
+
+    public GameThread getGame()
+    {
+        return aGame;
+    }
 
     //function moves player paddle up and down
     public void movePlayerPaddle(float y, Player player)
@@ -228,6 +319,16 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
             movePlayer(aOpponent, aOpponent.bounds.left, aOpponent.bounds.top + PADDLE_SPEED);
         }//end else if
     }//end doAi
+
+    public void update(Canvas canvas)
+    {
+        //collision detection code with conditionals
+        if(new Random(System.currentTimeMillis()).nextFloat() < aAiMoveProvability)
+        {
+            doAI();
+        }
+        aBall.moveBall(canvas);
+    }//end update
 
     public void setUpTable()
     {
