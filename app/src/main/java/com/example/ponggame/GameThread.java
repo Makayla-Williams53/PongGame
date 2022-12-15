@@ -41,15 +41,15 @@ public class GameThread extends Thread
     private static final int FPS = 60;
 
     //constructor
-    public GameThread(Context aCtx, SurfaceHolder aSurfaceHolder,  PongTable aPongTable, Handler aGameStatusHandler, Handler aScoreHandler)
+    public GameThread(Context aCtx, SurfaceHolder aSurfaceHolder, PongTable aPongTable, Handler aGameStatusHandler, Handler aScoreHandler)
     {
         this.aCtx = aCtx;
         this.aSurfaceHolder = aSurfaceHolder;
-        this.aGameStatusHandler = aGameStatusHandler;
         this.aPongTable = aPongTable;
+        this.aGameStatusHandler = aGameStatusHandler;
         this.aScoreHandler = aScoreHandler;
 
-        this.aRunLock = new Object();
+        aRunLock = new Object();
     }//end GameThread constructor
 
     //runs the class using Runnable which Thread implements
@@ -58,10 +58,10 @@ public class GameThread extends Thread
     {
         //creates a variable that contains seconds
         long aNextGameTick = SystemClock.uptimeMillis();
-        int skipTicks = 1000/FPS;
+        int skipTicks = 1000/ FPS;
 
         //while the gme is running
-        while(aRun)
+        while (aRun)
         {
             //create a null canvas
             Canvas c = null;
@@ -72,14 +72,14 @@ public class GameThread extends Thread
                 //c is a variable that holds a locked version of the surfaceHolder null rectangle
                 //lockCanvas prevents there being multiple lines of code trying to edit the same canvas
                 c = aSurfaceHolder.lockCanvas(null);
-                //if the surfaceholder is not null
-                if(c != null)
+                //if the surfaceHolder is not null
+                if (c!= null)
                 {
                     //prevents this line of code from being accessed until the first one has ran completely through
                     synchronized (aSurfaceHolder)
                     {
                         //if the game is running
-                        if(aGameState == STATE_RUNNING)
+                        if (aGameState == STATE_RUNNING)
                         {
                             //update the pongTable
                             aPongTable.update(c);
@@ -88,7 +88,7 @@ public class GameThread extends Thread
                         synchronized (aRunLock)
                         {
                             //if running is true
-                            if(aRun)
+                            if (aRun)
                             {
                                 //draw the canvas
                                 aPongTable.draw(c);
@@ -107,24 +107,24 @@ public class GameThread extends Thread
             finally
             {
                 //if c is not null
-                if(c != null)
+                if(c!=null)
                 {
                     //unlock the canvas so that it can be accessed in other places
                     aSurfaceHolder.unlockCanvasAndPost(c);
                 }//end if
             }//end finally
 
-        //increase gameticks by the frames per second
+        //increase gameTicks by the frames per second
         aNextGameTick += skipTicks;
-        //set up a long variable the is the number of gameticks minute the number of seconds
+        //set up a long variable the is the number of gameTicks minute the number of seconds
         long sleepTime = aNextGameTick - SystemClock.uptimeMillis();
         //if the timer is greater than 0
-        if(sleepTime > 0)
+        if (sleepTime > 0)
         {
-            try
-            {
-                //stop the code for as long as sleepTimer is
-                Thread.sleep(sleepTime);
+           try
+           {
+               //stop the code for as long as sleepTimer is
+               Thread.sleep(sleepTime);
             }//end try
             //if an interruptedException is thrown catch it
             catch (InterruptedException e) {
@@ -145,7 +145,7 @@ public class GameThread extends Thread
             //set resources variable
             Resources res = aCtx.getResources();
             //tests on variable against multiple cases(similar to an if else?)
-            switch(aGameState)
+            switch (aGameState)
             {
                 //if the switch(aGameState) is equal to the case(STATE_READY)
                 case STATE_READY:
@@ -156,7 +156,7 @@ public class GameThread extends Thread
                 //if the switch(aGameState) is equal to the case(STATE_RUNNING)
                 case STATE_RUNNING:
                     //hide the status textView
-                    hideStatus();
+                    hideStatusText();
                     //again I am sorry
                     break;
                 //if the switch(aGameState) is equal to the case(STATE_WIN)
@@ -193,7 +193,7 @@ public class GameThread extends Thread
     public void setUpNewRound()
     {
         //again prevents this line from being accessed multiple times at once
-        synchronized(aSurfaceHolder)
+        synchronized (aSurfaceHolder)
         {
             //setUpTable call
             aPongTable.setUpTable();
@@ -204,7 +204,7 @@ public class GameThread extends Thread
     public void setRunning(boolean running)
     {
         //prevents the line from being called numerous times at once and it getting confused over which one to do first
-        synchronized(aRunLock)
+        synchronized (aRunLock)
         {
             //change the aRun variable to hold that it is in fact running
             aRun = running;
@@ -224,7 +224,7 @@ public class GameThread extends Thread
     }//end isBetweenRounds
 
     //set the Status text view
-    public void setStatusText(String text)
+    private void setStatusText(String text)
     {
         //creates a message holding what the Status Handler is holding
         Message msg = aGameStatusHandler.obtainMessage();
@@ -232,7 +232,7 @@ public class GameThread extends Thread
         //a java property that holds specific data
         Bundle b = new Bundle();
         //inserts text and visibility to said bundle
-        b.putString("text", text);
+        b.putString("text",text);
         b.putInt("visibility", View.VISIBLE);
         //sets the message the bundle
         msg.setData(b);
@@ -241,28 +241,28 @@ public class GameThread extends Thread
     }//end setStatusText
 
     //hides teh status text view for when its running
-    private void hideStatus()
+    private void hideStatusText()
     {
         //creates a message and sets it to invisible
         Message msg = aGameStatusHandler.obtainMessage();
         Bundle b = new Bundle();
-        b.putInt("visibility", View.INVISIBLE);
+        b.putInt("visibility",View.INVISIBLE);
         msg.setData(b);
         //then sends said message
         aGameStatusHandler.sendMessage(msg);
     }//end hideStatus
 
     //sets the score textviews
-    public void setScoreText( String playerScore, String opponentScore)
+    public void setScoreText(String playerScore,String opponentScore)
     {
         //creates a message that holds the opponent and player scores
         Message msg = aScoreHandler.obtainMessage();
         Bundle b = new Bundle();
-        b.putString("player", playerScore);
-        b.putString("opponent", opponentScore);
+        b.putString("player",playerScore);
+        b.putString("opponent",opponentScore);
         msg.setData(b);
         //sends said message
-        aGameStatusHandler.sendMessage(msg);
+        aScoreHandler.sendMessage(msg);
     }//end setScoreText
 
 }//end GameThread
