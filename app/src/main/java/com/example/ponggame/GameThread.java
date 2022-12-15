@@ -94,20 +94,17 @@ public class GameThread extends Thread
                     aSurfaceHolder.unlockCanvasAndPost(c);
                 }//end if
             }//end finally
-        }//end while
 
         aNextGameTick += skipTicks;
         long sleepTime = aNextGameTick - SystemClock.uptimeMillis();
-        if(sleepTime > 0)
-        {
-            try
-            {
+        if(sleepTime > 0) {
+            try {
                 Thread.sleep(sleepTime);
             }//end try
-            catch (InterruptedException e)
-            {
+            catch (InterruptedException e) {
 
             }//end catch
+        }
         }//end if
     }//end run
 
@@ -120,10 +117,23 @@ public class GameThread extends Thread
             switch(aGameState)
             {
                 case STATE_READY:
-                    //setUpNewRound();
+                    setUpNewRound();
                     break;
                 case STATE_RUNNING:
-                    //hide the status hideStatus()
+                    //hide the status
+                    hideStatus();
+                    break;
+                case STATE_WIN:
+                    setStatusText(res.getString(R.string.mode_win));
+                    aPongTable.getPlayer().score++;
+                    setUpNewRound();
+                    break;
+                case STATE_LOSE:
+                    setStatusText(res.getString(R.string.mode_lose));
+                    aPongTable.getOpponent().score++;
+                    break;
+                case STATE_PAUSED:
+                    setStatusText(res.getString(R.string.mode_paused));
                     break;
             }//end switch
         }//end synchronized

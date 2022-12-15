@@ -147,6 +147,8 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         //draws the center line
         canvas.drawLine(mid,1, mid, aTableHeight - 1, aNetPaint);
 
+        aGame.setScoreText(String.valueOf(aPlayer.score), String.valueOf(aOpponent.score));
+
         //calls the draw functions for the players and ball
         aPlayer.draw(canvas);
         aOpponent.draw(canvas);
@@ -323,12 +325,70 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     public void update(Canvas canvas)
     {
         //collision detection code with conditionals
+        if(checkCollisionPlayer(aPlayer, aBall))
+        {
+            handleCollision(aPlayer, aBall);
+        }
+        else if(checkCollisionPlayer(aOpponent, aBall))
+        {
+            handleCollision(aOpponent, aBall);
+        }
+        else if(checkCollisionTopOrBottomWall())
+        {
+            aBall.velocityY = -aBall.velocityY;
+        }
+        else if(checkCollisionWithLeftWall())
+        {
+            aGame.setState(GameThread.STATE_LOSE);
+            return;
+        }
+        else if(checkCollisionWithRightWall())
+        {
+            aGame.setState(GameThread.STATE_WIN);
+            return;
+        }
+
+
         if(new Random(System.currentTimeMillis()).nextFloat() < aAiMoveProvability)
         {
             doAI();
         }
         aBall.moveBall(canvas);
     }//end update
+
+    private boolean checkCollisionPlayer(Player player, Ball ball)
+    {
+        return player.bounds.intersect(ball.circleX - ball.getRadius(), ball.circleY - ball.getRadius(), ball.circleX + ball.getRadius(), ball.circleY + ball.getRadius());
+    }
+
+    private boolean checkCollisionTopOrBottomWall()
+    {
+        return ((aBall.circleY <= aBall.getRadius()) || (aBall.circleY + aBall.getRadius() >= aTableHeight - 1));
+    }
+
+    private boolean checkCollisionWithLeftWall()
+    {
+        return aBall.circleX <= aBall.getRadius();
+    }
+
+    private boolean checkCollisionWithRightWall()
+    {
+        return aBall.circleX + aBall.getRadius() >= aTableWidth - 1;
+    }
+
+    private void handleCollision(Player player, Ball ball)
+    {
+        ball.velocityX = - ball.velocityX * 1.05f;
+        if(player == aPlayer)
+        {
+            ball.circleX = aPlayer.bounds.right + ball.getRadius();
+        }
+        else if(player == aOpponent)
+        {
+            ball.circleX = aOpponent.bounds.left -ball.getRadius();
+            PADDLE_SPEED = PADDLE_SPEED * 1.03f;
+        }
+    }
 
     public void setUpTable()
     {
@@ -352,7 +412,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         aBall.velocityX = (aBall.velocityX/Math.abs(aBall.velocityX)) * BALL_SPEED;
     }//end placeBall
 
-    public Player getPLayer()
+    public Player getPlayer()
     {
         return aPlayer;
     }
