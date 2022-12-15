@@ -126,7 +126,7 @@ public class GameThread extends Thread
                 //stop the code for as long as sleepTimer is
                 Thread.sleep(sleepTime);
             }//end try
-            //if an interuptedException is thrown catch it
+            //if an interruptedException is thrown catch it
             catch (InterruptedException e) {
                 e.printStackTrace();
             }//end catch
@@ -255,7 +255,7 @@ public class GameThread extends Thread
     //sets the score textviews
     public void setScoreText( String playerScore, String opponentScore)
     {
-        //creates a message that holods the opponent and player scores
+        //creates a message that holds the opponent and player scores
         Message msg = aScoreHandler.obtainMessage();
         Bundle b = new Bundle();
         b.putString("player", playerScore);

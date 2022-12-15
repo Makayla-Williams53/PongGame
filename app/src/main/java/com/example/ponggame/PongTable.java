@@ -86,7 +86,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         //sets a typedArray to contain the custom attributed given earlier
         TypedArray a = ctx.obtainStyledAttributes(attr,R.styleable.PongTable);
         ///sets the paddle dimensions and ball radius to the attributed made earlier
-        int paddleHeight = a.getInteger(R.styleable.PongTable_paddleHeight,340);
+        int paddleHeight = a.getInteger(R.styleable.PongTable_paddleHeight,250);
         int paddleWidth = a.getInteger(R.styleable.PongTable_paddleWidth,100);
         int ballRadius= a.getInteger(R.styleable.PongTable_ballRadius,25);
 
