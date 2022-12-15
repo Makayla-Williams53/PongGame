@@ -16,6 +16,7 @@ public class PongActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pong);
 
+        //crates all the objects and starts the game
         final PongTable table = (PongTable) findViewById(R.id.pongTable);
         table.setScoreOpponent((TextView) findViewById(R.id.tvScoreOpponent));
         table.setScorePlayer((TextView) findViewById(R.id.tvScorePlayer));
