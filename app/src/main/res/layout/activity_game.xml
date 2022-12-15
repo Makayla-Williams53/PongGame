@@ -11,7 +11,7 @@
         android:id="@+id/button"
         android:layout_width="150dp"
         android:layout_height="80dp"
-        android:onclick="startGame"
+        android:onClick="startGame"
         android:text="Play Game"
         android:textAllCaps="false"
         android:textColor="#fff"
