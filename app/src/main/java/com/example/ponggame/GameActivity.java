@@ -16,8 +16,10 @@ public class GameActivity extends AppCompatActivity
         setContentView(R.layout.activity_game);
     }//end onCreate
 
+    //onClick for the button
     public void startGame(View view)
     {
+        //starts the game activity
         Intent intent = new Intent(GameActivity.this, PongActivity.class);
         startActivity(intent);
     }//end startGame
