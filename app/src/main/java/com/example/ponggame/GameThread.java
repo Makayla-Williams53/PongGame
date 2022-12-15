@@ -26,7 +26,7 @@ public class GameThread extends Thread
     private boolean aSensorOn;
     //custom colors and such
     private final Context aCtx;
-    //allows editing of screen obejcts
+    //allows editing of screen objects
     private final SurfaceHolder aSurfaceHolder;
     private final Handler aGameStatusHandler;
     //pong table object
@@ -119,8 +119,10 @@ public class GameThread extends Thread
         //set up a long variable the is the number of gameticks minute the number of seconds
         long sleepTime = aNextGameTick - SystemClock.uptimeMillis();
         //if the timer is greater than 0
-        if(sleepTime > 0) {
-            try {
+        if(sleepTime > 0)
+        {
+            try
+            {
                 //stop the code for as long as sleepTimer is
                 Thread.sleep(sleepTime);
             }//end try

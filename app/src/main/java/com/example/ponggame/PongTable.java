@@ -25,7 +25,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     //creates a GameThread object
     private GameThread aGame;
 
-    //creates textViews variables for the various textviews on the screen
+    //creates textViews variables for the various text views on the screen
     private TextView aStatus;
     private TextView aScorePlayer;
     private TextView aScoreOpponent;
@@ -271,6 +271,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         {
             doAI();
         }//end if
+
         aBall.moveBall(canvas);
     }//end update
 
@@ -303,7 +304,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     private void handleCollision(Player player, Ball ball)
     {
         //increases the ball and makes it go in the alternate direction
-        ball.velocityX = - ball.velocityX * 1.05f;
+        ball.velocityX = -ball.velocityX * 1.05f;
         //if it is the player paddle
         if(player == aPlayer)
         {
@@ -314,7 +315,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         else if(player == aOpponent)
         {
             //set the ball x to the next to the opponent paddle left bound
-            ball.circleX = aOpponent.bounds.left -ball.getRadius();
+            ball.circleX = aOpponent.bounds.left - ball.getRadius();
             //increases the opponent paddle speed
             PADDLE_SPEED = PADDLE_SPEED * 1.03f;
         }//end else if
@@ -430,7 +431,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         //but at least is one away from the bottom
         else if(top + player.getPaddleHeight() >= aTableHeight)
         {
-            top = aTableHeight - player.getPaddleHeight() - 1;
+            top = aTableHeight - player.getPaddleWidth() - 1;
         }//end else if
 
         //offsets the player bounds by left and top but keeps the width and height the same
@@ -447,8 +448,9 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     //places the player paddles for the start of the game
     private void placePlayers()
     {
-        aPlayer.bounds.offsetTo(2, (aTableHeight - aPlayer.getPaddleHeight()) / 2);
-        aOpponent.bounds.offsetTo((aTableWidth-aOpponent.getPaddleWidth() - 2), (aTableHeight - aOpponent.getPaddleHeight()) / 2);
+        aPlayer.bounds.offsetTo(2,(aTableHeight-aPlayer.getPaddleHeight())/2);
+        aOpponent.bounds.offsetTo(aTableWidth-aOpponent.getPaddleWidth()-2,
+                (aTableHeight - aOpponent.getPaddleHeight())/2);
     }//end placePlayers
 
     //places the ball and starts it moving for the start of game
