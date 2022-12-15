@@ -65,49 +65,48 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         aHolder.addCallback(this);
 
         //Game Thread initialize
-        aGame = new GameThread(this.getContext(), aHolder, this,
-                new Handler(){
-                    //this handler contain the message of visibility and text and hides the text and sets the text
-                    @Override
-                    public void handleMessage(@NonNull Message msg) {
-                        super.handleMessage(msg);
-                        aStatus.setVisibility(msg.getData().getInt("visibility"));
-                        aStatus.setText(msg.getData().getString("text"));
-                    }
-                }, new Handler(){
-                    //this handler contains the message of the player and opponent information is string form
-                    @Override
-                    public void handleMessage(@NonNull Message msg) {
-                        super.handleMessage(msg);
-                        aScorePlayer.setText(msg.getData().getString("player"));
-                        aScoreOpponent.setText(msg.getData().getString("opponent"));
-                    }
+        aGame = new GameThread(this.getContext(),aHolder,this,new Handler(){
+
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                aStatus.setVisibility(msg.getData().getInt("visibility"));
+                aStatus.setText(msg.getData().getString("text"));
+            }
+        },new Handler(){
+
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                aScorePlayer.setText(msg.getData().getString("player"));
+                aScoreOpponent.setText(msg.getData().getString("opponent"));
+            }
         });
 
         //sets a typedArray to contain the custom attributed given earlier
-        TypedArray a = ctx.obtainStyledAttributes(attr, R.styleable.PongTable);
+        TypedArray a = ctx.obtainStyledAttributes(attr,R.styleable.PongTable);
         ///sets the paddle dimensions and ball radius to the attributed made earlier
-        int paddleHeight = a.getInteger(R.styleable.PongTable_paddleHeight, 340);
-        int paddleWidth = a.getInteger(R.styleable.PongTable_paddleWidth, 100);
-        int ballRadius = a.getInteger(R.styleable.PongTable_ballRadius, 25);
+        int paddleHeight = a.getInteger(R.styleable.PongTable_paddleHeight,340);
+        int paddleWidth = a.getInteger(R.styleable.PongTable_paddleWidth,100);
+        int ballRadius= a.getInteger(R.styleable.PongTable_ballRadius,25);
 
         //set player
         Paint playerPaint = new Paint();
         playerPaint.setAntiAlias(true);
-        playerPaint.setColor(ContextCompat.getColor(aContext, R.color.player_color));
-        aPlayer = new Player(paddleWidth, paddleHeight, playerPaint);
+        playerPaint.setColor(ContextCompat.getColor(aContext,R.color.player_color));
+        aPlayer = new Player(paddleWidth,paddleHeight,playerPaint);
 
         //set opponent
         Paint opponentPaint = new Paint();
         opponentPaint.setAntiAlias(true);
-        opponentPaint.setColor(ContextCompat.getColor(aContext, R.color.opponent_color));
-        aOpponent = new Player(paddleWidth, paddleHeight, opponentPaint);
+        opponentPaint.setColor(ContextCompat.getColor(aContext,R.color.opponent_color));
+        aOpponent = new Player(paddleWidth,paddleHeight,opponentPaint);
 
         //set ball
         Paint ballPaint = new Paint();
         ballPaint.setAntiAlias(true);
-        ballPaint.setColor(ContextCompat.getColor(aContext, R.color.ball_color));
-        aBall = new Ball(ballRadius, ballPaint);
+        ballPaint.setColor(ContextCompat.getColor(aContext,R.color.ball_color));
+        aBall = new Ball(ballRadius,ballPaint);
 
         //Middle line
         aNetPaint = new Paint();
@@ -120,12 +119,12 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         aNetPaint.setStrokeWidth(10.f);
         //sets the style or effect that is on the path of the object
         //dashed line
-        aNetPaint.setPathEffect(new DashPathEffect(new float[]{5,5}, 0));
+        aNetPaint.setPathEffect(new DashPathEffect(new float[]{5,5},0));
 
         //Draw Bounds
         aTableBoundPaint = new Paint();
         aTableBoundPaint.setAntiAlias(true);
-        aTableBoundPaint.setColor(ContextCompat.getColor(aContext, R.color.table_color));
+        aTableBoundPaint.setColor(ContextCompat.getColor(aContext,R.color.table_color));
         aTableBoundPaint.setStyle(Paint.Style.STROKE);
         aTableBoundPaint.setStrokeWidth(15.f);
 
@@ -140,17 +139,17 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     {
         super.draw(canvas);
         //draws the background color
-        canvas.drawColor(ContextCompat.getColor(aContext, R.color.table_color));
+        canvas.drawColor(ContextCompat.getColor(aContext,R.color.table_color));
         //draws the bounds rectangle
-        canvas.drawRect(0,0,aTableHeight, aTableWidth, aTableBoundPaint);
+        canvas.drawRect(0,0,aTableWidth,aTableHeight, aTableBoundPaint);
 
         //int for the center of the screen
         int mid = aTableWidth/2;
         //draws the center line
-        canvas.drawLine(mid,1, mid, aTableHeight - 1, aNetPaint);
+        canvas.drawLine(mid,1,mid,aTableHeight-1,aNetPaint);
 
         //sets the score text view to the string values of the player and opponent scores
-        aGame.setScoreText(String.valueOf(aPlayer.score), String.valueOf(aOpponent.score));
+        aGame.setScoreText(String.valueOf(aPlayer.score),String.valueOf(aOpponent.score));
 
         //calls the draw functions for the players and ball
         aPlayer.draw(canvas);
@@ -162,13 +161,13 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     public PongTable(Context context, AttributeSet attrs)
     {
         super(context, attrs);
-        initializeTable(context, attrs);
-    }//end PongTable
+        initializeTable(context,attrs);
+    }//end POngTable
 
     public PongTable(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
-        initializeTable(context, attrs);
+        initializeTable(context,attrs);
     }//end PongTable
 
     //creates the surface
@@ -199,18 +198,17 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         //stops the game
         aGame.setRunning(false);
         //whilst it is true
-        while(retry)
+        while (retry)
         {
             //try this
             try
             {
-                //
                 aGame.join();
                 //sets retry to false
                 retry = false;
             }//end try
             //catch interruptedException and print out a stackTrace
-            catch(InterruptedException e)
+            catch (InterruptedException e)
             {
                 e.printStackTrace();
             }//end catch
@@ -222,16 +220,21 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     private void doAI()
     {
         //if the top of the opponent paddle is higher than the ball
-        if(aOpponent.bounds.top > aBall.circleY)
+        if (aOpponent.bounds.top > aBall.circleY)
         {
             //have the paddle move down
             movePlayer(aOpponent, aOpponent.bounds.left, aOpponent.bounds.top - PADDLE_SPEED);
+            movePlayer(aOpponent,
+                    aOpponent.bounds.left,
+                    aOpponent.bounds.top - PADDLE_SPEED);
         }//end if
         //if the top of the paddle is lower than the ball
-        else if(aOpponent.bounds.top + aOpponent.getPaddleHeight() < aBall.circleY)
+        else if (aOpponent.bounds.top + aOpponent.getPaddleHeight() < aBall.circleY)
         {
             //have the paddle move up
-            movePlayer(aOpponent, aOpponent.bounds.left, aOpponent.bounds.top + PADDLE_SPEED);
+            movePlayer(aOpponent,
+                    aOpponent.bounds.left,
+                    aOpponent.bounds.top + PADDLE_SPEED);
         }//end else if
     }//end doAi
 
@@ -239,35 +242,35 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     public void update(Canvas canvas)
     {
         //if the player hits the ball
-        if(checkCollisionPlayer(aPlayer, aBall))
+        if (checkCollisionPlayer(aPlayer,aBall))
         {
-            handleCollision(aPlayer, aBall);
+            handleCollision(aPlayer,aBall);
         }//end if
         //if the opponent hits the ball
-        else if(checkCollisionPlayer(aOpponent, aBall))
+        else if (checkCollisionPlayer(aOpponent,aBall))
         {
-            handleCollision(aOpponent, aBall);
+            handleCollision(aOpponent,aBall);
         }//end first else if
         //if the ball hits the top or bottom wall
-        else if(checkCollisionTopOrBottomWall())
+        else if (checkCollisionTopOrBottomWall())
         {
             aBall.velocityY = -aBall.velocityY;
         }//end second else if
         //if the ball hits the left wall
-        else if(checkCollisionWithLeftWall())
+        else if (checkCollisionWithLeftWall())
         {
             aGame.setState(GameThread.STATE_LOSE);
             return;
         }//end third else if
         //if the ball hits the right wall
-        else if(checkCollisionWithRightWall())
+        else if (checkCollisionWithRightWall())
         {
             aGame.setState(GameThread.STATE_WIN);
             return;
         }//end forth else if
 
         //if the timer has been going longer than the AIProbability doAI
-        if(new Random(System.currentTimeMillis()).nextFloat() < aAiMoveProvability)
+        if (new Random(System.currentTimeMillis()).nextFloat() < aAiMoveProvability)
         {
             doAI();
         }//end if
@@ -276,16 +279,16 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     }//end update
 
     //checks if the paddle hits the ball
-    private boolean checkCollisionPlayer(Player player, Ball ball)
+    private boolean checkCollisionPlayer(Player player,Ball ball)
     {
         //checks if the bound intercepts with the ball radius
-        return player.bounds.intersect(ball.circleX - ball.getRadius(), ball.circleY - ball.getRadius(), ball.circleX + ball.getRadius(), ball.circleY + ball.getRadius());
+        return player.bounds.intersects(ball.circleX - ball.getRadius(),  ball.circleY - ball.getRadius(),  ball.circleX + ball.getRadius(),  ball.circleY + ball.getRadius());
     }//end checkCollision Player
 
     //sees if the ball hits the top or bottom wall
     private boolean checkCollisionTopOrBottomWall()
     {
-        return ((aBall.circleY <= aBall.getRadius()) || (aBall.circleY + aBall.getRadius() >= aTableHeight - 1));
+        return ((aBall.circleY <= aBall.getRadius()) || (aBall.circleY + aBall.getRadius() >= aTableHeight -1));
     }//end checkCollisionTopOrBottomWall
 
     //sees if the ball hit the left wall
@@ -294,30 +297,30 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         return aBall.circleX <= aBall.getRadius();
     }//end checkCollisionWithLeftWall
 
-    //sees if the ball hit the right wall
+    //sees if the checkCollisionWithRightWall()
     private boolean checkCollisionWithRightWall()
     {
-        return aBall.circleX + aBall.getRadius() >= aTableWidth - 1;
+        return aBall.circleX + aBall.getRadius() >= aTableWidth -1;
     }//end checkCollisionWithRightWall
 
     //deals with the collisions between the paddle and ball
-    private void handleCollision(Player player, Ball ball)
+    private void handleCollision(Player player,Ball ball)
     {
         //increases the ball and makes it go in the alternate direction
         ball.velocityX = -ball.velocityX * 1.05f;
         //if it is the player paddle
-        if(player == aPlayer)
+        if (player == aPlayer)
         {
             //set the ball x to the next to the player paddle right bound
             ball.circleX = aPlayer.bounds.right + ball.getRadius();
         }//end if
         //if it is the opponent paddle
-        else if(player == aOpponent)
+        else if (player == aOpponent)
         {
             //set the ball x to the next to the opponent paddle left bound
             ball.circleX = aOpponent.bounds.left - ball.getRadius();
             //increases the opponent paddle speed
-            PADDLE_SPEED = PADDLE_SPEED * 1.03f;
+            PADDLE_SPEED = PADDLE_SPEED * 1.05f;
         }//end else if
     }//end handleCollision
 
@@ -326,10 +329,10 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     public boolean onTouchEvent(MotionEvent event)
     {
         //if the sensors are not on
-        if(!aGame.sensorsOn())
+        if (!aGame.sensorsOn())
         {
             //tests a variable against multiple conditions
-            switch(event.getAction())
+            switch (event.getAction())
             {
                 //if the switch(event) is equal to the case(ACTION_DOWN)
                 case MotionEvent.ACTION_DOWN:
@@ -342,7 +345,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
                     else
                     {
                         //tests if the user is touching the paddle
-                        if(isTouchOnPaddle(event, aPlayer))
+                        if(isTouchOnPaddle(event,aPlayer))
                         {
                             //set moving to true and change the variable that holds the y
                             aMoving = true;
@@ -354,12 +357,12 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
                 //if the switch(aGameState) is equal to the case(ACTION_MOVE)
                 case MotionEvent.ACTION_MOVE:
                     //if the paddle is moving
-                    if(aMoving) {
+                    if (aMoving) {
                         //change the player y
                         float y = event.getY();
                         float dy = y - aLastTouchY;
                         aLastTouchY = y;
-                        movePlayerPaddle(dy, aPlayer);
+                        movePlayerPaddle(dy,aPlayer);
                     }//end if
                     //forgive me with all the breaks
                     break;
@@ -388,10 +391,10 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     }//end onTouchEvent
 
     //sees if the player is touching the paddle test
-    public boolean isTouchOnPaddle(MotionEvent event, Player aPlayer)
+    private boolean isTouchOnPaddle(MotionEvent event,Player mPlayer)
     {
         //tests to see if the bounds of aPlayer contains the passed in object same x and y
-        return aPlayer.bounds.contains(event.getX(), event.getY());
+        return aPlayer.bounds.contains(event.getX(),event.getY());
     }//end isTouchOnPaddle
 
     //getter
@@ -401,41 +404,40 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     }//end getGame
 
     //function moves player paddle up and down
-    public void movePlayerPaddle(float y, Player player)
+    public void movePlayerPaddle(float dy,Player player)
     {
         //prevents this line from being ran multiple times at once
         synchronized (aHolder)
         {
-            movePlayer(player, player.bounds.left, player.bounds.top + y);
+            movePlayer(player,player.bounds.left,player.bounds.top + dy);
         }//end synchronized
     }//end movePlayerPaddle
 
     //sets the player bounds
-    public synchronized void movePlayer(Player player, float left, float top)
+    public synchronized void movePlayer(Player player,float left,float top)
     {
         //sets the left bound to at least two in
-        if(left < 2)
+        if (left<2)
         {
             left = 2;
         }//end if
         //but is at least is two away from the right
-        else if(left + player.getPaddleWidth() >= aTableWidth - 2)
-        {
+        else if (left + player.getPaddleWidth() >= aTableWidth -2){
             left = aTableWidth - player.getPaddleWidth() - 2;
         }//end else
         //sets the top bound to be at least 0
-        if(top < 0)
+        if (top <0)
         {
             top = 0;
         }//end if
         //but at least is one away from the bottom
-        else if(top + player.getPaddleHeight() >= aTableHeight)
+        else if (top + player.getPaddleHeight()>= aTableHeight)
         {
-            top = aTableHeight - player.getPaddleWidth() - 1;
+            top = aTableHeight - player.getPaddleHeight() - 1;
         }//end else if
 
         //offsets the player bounds by left and top but keeps the width and height the same
-        player.bounds.offsetTo(left, top);
+        player.bounds.offsetTo(left,top);
     }//end movePlayer
 
     //set up places the parts
@@ -449,17 +451,15 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     private void placePlayers()
     {
         aPlayer.bounds.offsetTo(2,(aTableHeight-aPlayer.getPaddleHeight())/2);
-        aOpponent.bounds.offsetTo(aTableWidth-aOpponent.getPaddleWidth()-2,
-                (aTableHeight - aOpponent.getPaddleHeight())/2);
+        aOpponent.bounds.offsetTo(aTableWidth-aOpponent.getPaddleWidth()-2,  (aTableHeight - aOpponent.getPaddleHeight())/2);
     }//end placePlayers
 
     //places the ball and starts it moving for the start of game
-    private void placeBall()
-    {
+    private void placeBall(){
         aBall.circleX = aTableWidth/2;
         aBall.circleY = aTableHeight/2;
-        aBall.velocityY = (aBall.velocityY/Math.abs(aBall.velocityY)) * BALL_SPEED;
-        aBall.velocityX = (aBall.velocityX/Math.abs(aBall.velocityX)) * BALL_SPEED;
+        aBall.velocityY = (aBall.velocityY / Math.abs(aBall.velocityY) * BALL_SPEED);
+        aBall.velocityX = (aBall.velocityX / Math.abs(aBall.velocityX) * BALL_SPEED);
     }//en// d placeBall
 
     //getters
