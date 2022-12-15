@@ -21,9 +21,7 @@ public class Ball
         this.radius = radius;
         this.velocityX = PongTable.BALL_SPEED;
         this.velocityY = PongTable.BALL_SPEED;
-
     }//end Ball constructor
-
 
     //draws the ball
     public void draw(Canvas canvas)

@@ -22,9 +22,6 @@ import java.util.Random;
 
 public class PongTable extends SurfaceView implements SurfaceHolder.Callback
 {
-    public static final String TAG = PongTable.class.getSimpleName();
-
-
     private GameThread aGame;
 
     private TextView aStatus;
@@ -72,7 +69,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
                     public void handleMessage(@NonNull Message msg) {
                         super.handleMessage(msg);
                         aStatus.setVisibility(msg.getData().getInt("visibility"));
-                        aStatus.setText(msg.getData().getString("Text"));
+                        aStatus.setText(msg.getData().getString("text"));
                     }
                 }, new Handler(){
                     @Override
@@ -125,7 +122,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         aTableBoundPaint.setAntiAlias(true);
         aTableBoundPaint.setColor(ContextCompat.getColor(aContext, R.color.table_color));
         aTableBoundPaint.setStyle(Paint.Style.STROKE);
-        aTableBoundPaint.setStrokeWidth(15.0f);
+        aTableBoundPaint.setStrokeWidth(15.f);
 
         //set up AI
         //change later
@@ -204,105 +201,6 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
             }
         }
     }//end surfaceDestroyed
-
-    //touch screen events
-    @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
-        if(!aGame.sensorsOn())
-        {
-            switch(event.getAction())
-            {
-                case MotionEvent.ACTION_DOWN:
-                    if(aGame.isBetweenRounds())
-                    {
-                        aGame.setState(GameThread.STATE_RUNNING);
-                    }
-                    else
-                    {
-                        if(isTouchOnPaddle(event,aPlayer))
-                        {
-                            aMoving = true;
-                            aLastTouchY = event.getY();
-                        }
-                    }
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    if(aMoving)
-                    {
-                        float y = event.getY();
-                        float dy = y - aLastTouchY;
-                        aLastTouchY = y;
-                        movePlayerPaddle(dy, aPlayer);
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    aMoving = false;
-                    break;
-            }//end switch
-        }//end if
-        else
-        {
-            if(event.getAction() == MotionEvent.ACTION_DOWN)
-            {
-                if(aGame.isBetweenRounds())
-                {
-                    aGame.setState(GameThread.STATE_RUNNING);
-                }
-            }
-        }//end else
-        return true;
-    }//end onTouchEvent
-
-    public GameThread getGame()
-    {
-        return aGame;
-    }
-
-    //function moves player paddle up and down
-    public void movePlayerPaddle(float y, Player player)
-    {
-        synchronized (aHolder)
-        {
-            movePlayer(player, player.bounds.left, player.bounds.top + y);
-        }//end synchronized
-    }//end movePlayerPaddle
-
-    //collision test
-    public boolean isTouchOnPaddle(MotionEvent event, Player player)
-    {
-        //tests to see if the bounds of aPlayer contains the passed in object same x and y
-        return aPlayer.bounds.contains(event.getX(), event.getY());
-    }//end isTouchOnPaddle
-
-    //sets the player bounds
-    public synchronized void movePlayer(Player player, float left, float top)
-    {
-        //sets the left bound to at least two in
-        if(left < 2)
-        {
-            left = 2;
-        }
-        //but is at least is two away from the right
-        else if(left + player.getPaddleWidth() >= aTableWidth - 2)
-        {
-            left = aTableWidth - player.getPaddleWidth() - 2;
-        }
-
-        //sts the top bound to be at least 0
-        if(top < 0)
-        {
-            top = 0;
-        }
-        //but at least is one away from the bottom
-        else if(top + player.getPaddleHeight() >= aTableHeight)
-        {
-            top = aTableHeight - player.getPaddleHeight() - 1;
-        }
-
-        //offsets the player bounds by left and top but keeps the width and height the same
-        player.bounds.offsetTo(left, top);
-    }
 
     //makes opponent paddle move
     //change later
@@ -388,6 +286,105 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
             ball.circleX = aOpponent.bounds.left -ball.getRadius();
             PADDLE_SPEED = PADDLE_SPEED * 1.03f;
         }
+    }
+
+    //touch screen events
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        if(!aGame.sensorsOn())
+        {
+            switch(event.getAction())
+            {
+                case MotionEvent.ACTION_DOWN:
+                    if(aGame.isBetweenRounds())
+                    {
+                        aGame.setState(GameThread.STATE_RUNNING);
+                    }
+                    else
+                    {
+                        if(isTouchOnPaddle(event,aPlayer))
+                        {
+                            aMoving = true;
+                            aLastTouchY = event.getY();
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if(aMoving)
+                    {
+                        float y = event.getY();
+                        float dy = y - aLastTouchY;
+                        aLastTouchY = y;
+                        movePlayerPaddle(dy, aPlayer);
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    aMoving = false;
+                    break;
+            }//end switch
+        }//end if
+        else
+        {
+            if(event.getAction() == MotionEvent.ACTION_DOWN)
+            {
+                if(aGame.isBetweenRounds())
+                {
+                    aGame.setState(GameThread.STATE_RUNNING);
+                }
+            }
+        }//end else
+        return true;
+    }//end onTouchEvent
+
+    //collision test
+    public boolean isTouchOnPaddle(MotionEvent event, Player aPlayer)
+    {
+        //tests to see if the bounds of aPlayer contains the passed in object same x and y
+        return aPlayer.bounds.contains(event.getX(), event.getY());
+    }//end isTouchOnPaddle
+
+    public GameThread getGame()
+    {
+        return aGame;
+    }
+
+    //function moves player paddle up and down
+    public void movePlayerPaddle(float y, Player player)
+    {
+        synchronized (aHolder)
+        {
+            movePlayer(player, player.bounds.left, player.bounds.top + y);
+        }//end synchronized
+    }//end movePlayerPaddle
+
+    //sets the player bounds
+    public synchronized void movePlayer(Player player, float left, float top)
+    {
+        //sets the left bound to at least two in
+        if(left < 2)
+        {
+            left = 2;
+        }
+        //but is at least is two away from the right
+        else if(left + player.getPaddleWidth() >= aTableWidth - 2)
+        {
+            left = aTableWidth - player.getPaddleWidth() - 2;
+        }
+
+        //sts the top bound to be at least 0
+        if(top < 0)
+        {
+            top = 0;
+        }
+        //but at least is one away from the bottom
+        else if(top + player.getPaddleHeight() >= aTableHeight)
+        {
+            top = aTableHeight - player.getPaddleHeight() - 1;
+        }
+
+        //offsets the player bounds by left and top but keeps the width and height the same
+        player.bounds.offsetTo(left, top);
     }
 
     public void setUpTable()

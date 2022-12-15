@@ -131,6 +131,7 @@ public class GameThread extends Thread
                 case STATE_LOSE:
                     setStatusText(res.getString(R.string.mode_lose));
                     aPongTable.getOpponent().score++;
+                    setUpNewRound();
                     break;
                 case STATE_PAUSED:
                     setStatusText(res.getString(R.string.mode_paused));

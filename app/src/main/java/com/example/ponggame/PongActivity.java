@@ -19,7 +19,7 @@ public class PongActivity extends AppCompatActivity
         final PongTable table = (PongTable) findViewById(R.id.pongTable);
         table.setScoreOpponent((TextView) findViewById(R.id.tvScoreOpponent));
         table.setScorePlayer((TextView) findViewById(R.id.tvScorePlayer));
-        table.setStatusView((TextView) findViewById(R.id.tvGameStatus));
+        table.setStatusView((TextView) findViewById(R.id.tvStatus));
 
         aGameThread = table.getGame();
 

@@ -19,7 +19,8 @@ public class GameActivity extends AppCompatActivity
     public void startGame(View view)
     {
         Intent intent = new Intent(GameActivity.this, PongActivity.class);
-    }
+        startActivity(intent);
+    }//end startGame
 }//end GameActivity class
 
 //followed a tutorial from Vijay Kumar
