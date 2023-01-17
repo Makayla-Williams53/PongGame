@@ -47,7 +47,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     SurfaceHolder aHolder;
 
     //final ints for the speeds of the paddle and ball
-    public static float PADDLE_SPEED = 15.0f;
+    public static float PADDLE_SPEED = 14.5f;
     public static float BALL_SPEED = 15.0f;
 
     //the variables for the Ai
@@ -86,7 +86,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
         //sets a typedArray to contain the custom attributed given earlier
         TypedArray a = ctx.obtainStyledAttributes(attr,R.styleable.PongTable);
         ///sets the paddle dimensions and ball radius to the attributed made earlier
-        int paddleHeight = a.getInteger(R.styleable.PongTable_paddleHeight,250);
+        int paddleHeight = a.getInteger(R.styleable.PongTable_paddleHeight,215);
         int paddleWidth = a.getInteger(R.styleable.PongTable_paddleWidth,100);
         int ballRadius= a.getInteger(R.styleable.PongTable_ballRadius,25);
 
@@ -307,7 +307,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
     private void handleCollision(Player player,Ball ball)
     {
         //increases the ball and makes it go in the alternate direction
-        ball.velocityX = -ball.velocityX * 1.05f;
+        ball.velocityX = -ball.velocityX * 1.02f;
         //if it is the player paddle
         if (player == aPlayer)
         {
