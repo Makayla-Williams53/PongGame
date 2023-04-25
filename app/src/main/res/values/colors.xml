@@ -18,4 +18,6 @@
     <color name="player_color">#91191D</color>
     <color name="opponent_color">#2436AA</color>
     <color name="ball_color">#FAFAFB</color>
+
+    <color name="select_color">#A6CEED</color>
 </resources>

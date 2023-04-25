@@ -130,7 +130,7 @@ public class PongTable extends SurfaceView implements SurfaceHolder.Callback
 
         //set up AI
         //change later
-        aAiMoveProvability = 0.8f;
+        aAiMoveProvability = 9.0f;
 
     }//end initPongTable
 

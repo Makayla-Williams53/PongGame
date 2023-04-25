@@ -8,7 +8,7 @@
     tools:context=".GameActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/goButton"
         android:layout_width="150dp"
         android:layout_height="80dp"
         android:onClick="startGame"
@@ -21,7 +21,56 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.796"
+        app:layout_constraintVertical_bias="0.87" />
+
+    <Button
+        android:id="@+id/easyButton"
+        android:layout_width="150dp"
+        android:layout_height="80dp"
+        android:onClick="easyPress"
+        android:text="Easy"
+        android:textAllCaps="false"
+        android:textColor="#000"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.62" />
+
+    <Button
+        android:id="@+id/mediumButton"
+        android:layout_width="150dp"
+        android:layout_height="80dp"
+        android:onClick="mediumPress"
+        android:text="Medium"
+        android:textAllCaps="false"
+        android:textColor="#000"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.37"
+        />
+
+    <Button
+        android:id="@+id/hardButton"
+        android:layout_width="150dp"
+        android:layout_height="80dp"
+        android:onClick="hardPress"
+        android:text="Hard"
+        android:textAllCaps="false"
+        android:textColor="#000"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.12"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

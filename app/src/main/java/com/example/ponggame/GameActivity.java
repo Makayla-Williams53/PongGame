@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 public class GameActivity extends AppCompatActivity
 {
@@ -23,6 +24,22 @@ public class GameActivity extends AppCompatActivity
         Intent intent = new Intent(GameActivity.this, PongActivity.class);
         startActivity(intent);
     }//end startGame
+
+    public void easyPress(View view)
+    {
+
+    }//end easyPress
+
+    public void mediumPress(View view)
+    {
+
+    }//end mediumPress
+
+    public void hardPress(View view)
+    {
+
+    }//end hardPress
+
 }//end GameActivity class
 
 //followed a tutorial from Vijay Kumar
